@@ -8,7 +8,8 @@
     "build": "next build",
     "export": "npm run build && next export",
     "start": "next start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "npx git cz"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "2.0.6",
     "autoprefixer": "9.7.4",
+    "git-cz": "^4.3.1",
     "tailwindcss": "1.2.0"
   }
 }
