@@ -14,7 +14,7 @@ export default class MyApp extends App {
             name="viewport"
             content="width=device-width, initial-scale=1.0"
           />
-          <title>Next.js TypeScript Quickstart</title>
+          <title>Säätutka</title>
         </Head>
         <Component {...pageProps} />
       </>
