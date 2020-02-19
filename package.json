@@ -28,8 +28,11 @@
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "2.0.6",
+    "@types/node": "^13.7.2",
+    "@types/react": "^16.9.20",
     "autoprefixer": "9.7.4",
     "git-cz": "^4.3.1",
-    "tailwindcss": "1.2.0"
+    "tailwindcss": "1.2.0",
+    "typescript": "^3.7.5"
   }
 }
