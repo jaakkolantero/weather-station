@@ -2,7 +2,7 @@ import React from "react";
 
 const WeatherCard = () => {
   return (
-    <div className="mb-64 pb-4 px-4 bg-white rounded-lg border border-gray-300">
+    <div className="pb-4 px-4 bg-white rounded-lg border border-gray-300">
       <div className="flex flex-no-wrap justify-between mb-6">
         <div className="flex flex-col justify-center">
           <div className="text-2xl leading-none">Helsinki</div>
