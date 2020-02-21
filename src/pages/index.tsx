@@ -1,8 +1,12 @@
 import useSWR from "swr";
 import Layout from "../components/Layout";
 import { fetcher } from "../utils/fetch";
-import { useEffect, Fragment } from "react";
+import { useEffect, Fragment, useState } from "react";
 import { fromUnixTime, format } from "date-fns";
+import WeatherCard, { CurrentWeather } from "../components/WeatherCard";
+import WeatherCardSmall, {
+  FutureWeather
+} from "../components/WeatherCardSmall";
 
 interface WeatherListItem {
   dt: number;
@@ -25,54 +29,63 @@ interface WeatherData {
   list: WeatherListItem[];
 }
 
+interface Weather {
+  current: CurrentWeather;
+  future: FutureWeather[];
+}
+
 const Index = () => {
   const { data } = useSWR<WeatherData[]>("/api/weather", fetcher);
+  const [weathers, setWeathers] = useState<Weather[]>();
 
   useEffect(() => {
-    data && console.log("data", data);
+    if (data) {
+      const weatherItems = data.map(weather => {
+        const current = {
+          name: weather.city.name,
+          description: weather.list[0].weather[0].description,
+          img_url: `http://openweathermap.org/img/wn/${weather.list[0].weather[0].icon}@2x.png`,
+          temp: weather.list[0].main.temp,
+          wind: weather.list[0].wind.speed,
+          humidity: weather.list[0].main.humidity,
+          // TODO: implement precipitation
+          precipitation: 0,
+          date: fromUnixTime(weather?.list[0]?.dt)
+        };
+        const future = weather.list
+          .slice(1)
+          .slice(0, 5)
+          .map(listItem => ({
+            date: fromUnixTime(listItem?.dt),
+            img_url: `http://openweathermap.org/img/wn/${listItem.weather[0].icon}@2x.png`,
+            temp: listItem.main.temp,
+            wind: listItem.wind.speed,
+            humidity: listItem.main.humidity,
+            // TODO: implement precipitation
+            precipitation: 0
+          }));
+        return { current, future };
+      });
+      console.log("weatherItems", weatherItems);
+      setWeathers(weatherItems);
+    }
   }, [data]);
 
   return (
     <Layout>
-      <div className="bg-gray-100 w-full mx-auto py-4 px-4">
-        <div className="mb-64 py-4 px-4 bg-white rounded border border-gray-300"></div>
-        {data &&
-          data.map((location: WeatherData) => (
-            <Fragment key={location?.city?.id}>
-              <div>{location?.city?.name}</div>
-              <div>{location?.list[0]?.weather[0].description}</div>
-              <div>{location?.city?.id}</div>
-              <img
-                src={`http://openweathermap.org/img/wn/${location.list[0].weather[0].icon}.png`}
-              />
-              <div>{format(fromUnixTime(location?.list[0]?.dt), "HH:mm")}</div>
-              <div>{format(fromUnixTime(location?.list[0]?.dt), "MMM do")}</div>
-              <div className="bg-pink-300">
-                <div>
-                  {location.list
-                    .slice(1)
-                    .slice(0, 5)
-                    .map(weather => (
-                      <div className="ml-3">
-                        <div>time</div>
-                        <div>{format(fromUnixTime(weather.dt), "HH:mm")}</div>
-                        <div>temp</div>
-                        <div>{weather.main.temp}</div>
-                        <div>wind</div>
-                        <div>{weather.wind.speed}</div>
-                        <div>humidity</div>
-                        <div>{weather.main.humidity}</div>
-                        <div>precipitation</div>
-                        <div>icon</div>
-                        <img
-                          src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
-                        />
-                        <div>{weather.weather[0].icon}</div>
-                      </div>
-                    ))}
-                </div>
+      <div className="bg-gray-100 flex justify-center flex-wrap pt-4">
+        {weathers &&
+          weathers.map(weather => (
+            <div className="mx-4 max-w-sm">
+              <WeatherCard weather={weather?.current} />
+              <div className="mb-3" />
+              <div className="grid grid-cols-5 gap-2">
+                {weather.future.map(futureWeather => (
+                  <WeatherCardSmall weather={futureWeather} />
+                ))}
               </div>
-            </Fragment>
+              <div className="mb-6" />
+            </div>
           ))}
       </div>
     </Layout>
