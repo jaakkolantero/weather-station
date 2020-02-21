@@ -2,6 +2,7 @@ import React from "react";
 import { format } from "date-fns";
 
 export interface CurrentWeather {
+  id: string;
   name: string;
   description: string;
   img_url: string;

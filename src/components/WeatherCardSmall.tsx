@@ -2,6 +2,7 @@ import React from "react";
 import { format } from "date-fns";
 
 export interface FutureWeather {
+  id: string;
   date: Date;
   img_url: string;
   temp: number;
