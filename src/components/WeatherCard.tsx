@@ -1,5 +1,5 @@
 import React from "react";
-import { format } from "date-fns";
+import { format, fromUnixTime } from "date-fns";
 
 export interface CurrentWeather {
   id: string;
@@ -10,7 +10,7 @@ export interface CurrentWeather {
   wind: number;
   humidity: number;
   precipitation: number;
-  date: Date;
+  date: number;
 }
 interface WeatherCardProps {
   weather: CurrentWeather;
@@ -38,10 +38,14 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
       <div className="flex flex-no-wrap justify-between">
         <div className="flex flex-col justify-end">
           <div className="text-xl">
-            {weather?.date ? format(weather?.date, "MMM do") : null}
+            {weather?.date
+              ? format(fromUnixTime(weather?.date), "MMM do")
+              : null}
           </div>
           <div className="text-gray-700">
-            {weather?.date ? format(weather?.date, "HH:mm") : null}
+            {weather?.date
+              ? format(fromUnixTime(weather?.date), "HH:mm")
+              : null}
           </div>
         </div>
         <div className="flex flex-col text-right justify-end text-gray-700">
@@ -50,7 +54,8 @@ const WeatherCard = ({ weather }: WeatherCardProps) => {
             Humidity: {weather?.humidity} %
           </div>
           <div className="whitespace-no-wrap">
-            Precipitation (3h): {weather.precipitation} mm
+            Precipitation (3h):{" "}
+            {weather?.precipitation ? weather.precipitation : "0"} mm
           </div>
         </div>
       </div>

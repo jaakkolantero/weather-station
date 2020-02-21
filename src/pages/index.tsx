@@ -10,72 +10,21 @@ import WeatherCardSmall, {
 } from "../components/WeatherCardSmall";
 import Dropdown from "../components/Dropdown";
 
-interface WeatherListItem {
-  dt: number;
-  main: {
-    temp: number;
-    humidity: number;
-  };
-  weather: Array<{ id: number; description: string; icon: string }>;
-  wind: {
-    speed: number;
-  };
-  rain: { [key: string]: number };
-}
-
-interface WeatherData {
-  city: {
-    id: number;
-    name: string;
-  };
-  list: WeatherListItem[];
-}
-
 export interface Weather {
   current: CurrentWeather;
   future: FutureWeather[];
 }
 
 const Index = () => {
-  const { data } = useSWR<WeatherData[]>("/api/weather", fetcher);
-  const [weathers, setWeathers] = useState<Weather[]>();
+  const { data: weathers } = useSWR<Weather[]>("/api/weather", fetcher);
   const [visibleWeathers, setVisibleWeathers] = useState<Weather[]>();
 
   useEffect(() => {
-    if (data) {
-      const weatherItems = data.map(weather => {
-        const current = {
-          id: uuid.v4(),
-          name: weather.city.name,
-          description: weather.list[0].weather[0].description,
-          img_url: `http://openweathermap.org/img/wn/${weather.list[0].weather[0].icon}@2x.png`,
-          temp: weather.list[0].main.temp,
-          wind: weather.list[0].wind.speed,
-          humidity: weather.list[0].main.humidity,
-          // TODO: implement precipitation
-          precipitation: 0,
-          date: fromUnixTime(weather?.list[0]?.dt)
-        };
-        const future = weather.list
-          .slice(1)
-          .slice(0, 5)
-          .map(listItem => ({
-            id: uuid.v4(),
-            date: fromUnixTime(listItem?.dt),
-            img_url: `http://openweathermap.org/img/wn/${listItem.weather[0].icon}@2x.png`,
-            temp: listItem.main.temp,
-            wind: listItem.wind.speed,
-            humidity: listItem.main.humidity,
-            // TODO: implement precipitation
-            precipitation: 0
-          }));
-        return { current, future };
-      });
-      console.log("weatherItems", weatherItems);
-      setWeathers(weatherItems);
-      setVisibleWeathers(weatherItems);
+    if (weathers) {
+      console.log("weathers", weathers);
+      setVisibleWeathers(weathers);
     }
-  }, [data]);
+  }, [weathers]);
 
   const handleWeatherChange = (newWeathers: Weather[]): void => {
     setVisibleWeathers(newWeathers);

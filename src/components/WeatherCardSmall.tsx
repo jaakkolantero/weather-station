@@ -1,9 +1,9 @@
 import React from "react";
-import { format } from "date-fns";
+import { format, fromUnixTime } from "date-fns";
 
 export interface FutureWeather {
   id: string;
-  date: Date;
+  date: number;
   img_url: string;
   temp: number;
   wind: number;
@@ -19,7 +19,7 @@ const WeatherCardSmall = ({ weather }: WeatherCardSmallProps) => {
     <div className="flex flex-col">
       <div className="py-4 px-1 flex flex-col items-center bg-white border border-gray-300 rounded-t-lg">
         <div className="text-gray-700 whitespace-no-wrap">
-          {weather?.date ? format(weather?.date, "HH:mm") : null}
+          {weather?.date ? format(fromUnixTime(weather?.date), "HH:mm") : null}
         </div>
         {weather.img_url ? (
           <img
@@ -36,7 +36,9 @@ const WeatherCardSmall = ({ weather }: WeatherCardSmallProps) => {
       <div className="py-4 px-4 flex flex-col items-center bg-blue-100 text-gray-700 text-sm rounded-b-lg border border-t-0 border-gray-300 leading-snug">
         <div className="whitespace-no-wrap">{weather?.wind} m/s</div>
         <div className="whitespace-no-wrap">{weather?.humidity} %</div>
-        <div className="whitespace-no-wrap">{weather.precipitation} mm</div>
+        <div className="whitespace-no-wrap">
+          {weather?.precipitation ? weather.precipitation : "0"} mm
+        </div>
       </div>
     </div>
   );

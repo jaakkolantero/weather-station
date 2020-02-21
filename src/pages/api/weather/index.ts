@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fetch from "isomorphic-unfetch";
 import { dummyWeathers } from "../../../utils/dummy";
+import { toWeather } from "../../../utils/toWeather";
 
 const offices = [
   { city: "tampere", id: 634964 },
@@ -12,7 +13,7 @@ const offices = [
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (process.env.NODE_ENV === "development") {
     console.log("Using dummy data!");
-    return res.status(200).json(dummyWeathers);
+    return res.status(200).json(toWeather(dummyWeathers));
   }
 
   const weathers = await Promise.all(
@@ -22,5 +23,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       ).then(data => data.json())
     )
   );
-  res.status(200).json([...weathers]);
+  res.status(200).json(toWeather(weathers));
 };
