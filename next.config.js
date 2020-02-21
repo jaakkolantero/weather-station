@@ -4,6 +4,6 @@ module.exports = {
   target: "serverless",
   env: {
     OPENWEATHERMAP_API_KEY: process.env.OPENWEATHERMAP_API_KEY,
-    USE_DUMMY_DATA: process.env.USE_DUMMY_DATA
+    DATA_SOURCE: process.env.DATA_SOURCE
   }
 };
