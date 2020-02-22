@@ -7,11 +7,13 @@ interface DropdownProps {
   weathers: Weather[];
 }
 
+const allCities = "Kaikki kaupungit";
+
 const Dropdown: NextPage<DropdownProps> = ({
   weathers,
   onWeatherChange
 }: DropdownProps) => {
-  const [selected, setSelected] = useState("Kaikki kaupungit");
+  const [selected, setSelected] = useState(allCities);
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(prev => !prev);
 
@@ -19,13 +21,18 @@ const Dropdown: NextPage<DropdownProps> = ({
     const filter = event.currentTarget.value;
     if (filter === "all") {
       onWeatherChange(weathers);
+      setSelected(allCities);
     } else {
       const visibleWeathers = weathers?.filter(
         weather => weather.current.id === filter
       );
       if (visibleWeathers.length > 0) {
         onWeatherChange(visibleWeathers);
+        setSelected(
+          visibleWeathers.map(weather => weather.current.name).join(" ")
+        );
       } else {
+        console.log("this should not happen.");
         onWeatherChange(weathers);
       }
     }
