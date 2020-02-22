@@ -11,7 +11,10 @@ const offices = [
 ];
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (process.env.NODE_ENV === "development") {
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.DATA_SOURCE === "DUMMY"
+  ) {
     console.log("Using dummy data!");
     return res.status(200).json(toWeather(dummyWeathers));
   }
