@@ -39,19 +39,19 @@ const Dropdown: NextPage<DropdownProps> = ({
     toggleMenu();
   };
   return (
-    <div className="relative">
-      <button
-        className="flex focus:outline-none justify-between border border-gray-300 bg-white py-3 px-4 w-full rounded-lg"
-        onClick={toggleMenu}
-        type="button"
-        aria-haspopup="true"
-        aria-expanded={isOpen}
-      >
-        <span>{selected}</span>
-        <span className="caret">{isOpen ? "▲" : "▼"}</span>
-      </button>
-      {isOpen ? (
-        <OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
+    <OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
+      <div className="relative">
+        <button
+          className="flex focus:outline-none justify-between border border-gray-300 bg-white py-3 px-4 w-full rounded-lg"
+          onClick={toggleMenu}
+          type="button"
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+        >
+          <span>{selected}</span>
+          <span className="caret">{isOpen ? "▲" : "▼"}</span>
+        </button>
+        {isOpen ? (
           <ul
             role="menu"
             className="capitalize mt-1 w-full absolute border border-gray-300 bg-blue-100 py-3 px-4 shadow-lg rounded-lg"
@@ -77,9 +77,9 @@ const Dropdown: NextPage<DropdownProps> = ({
               </li>
             ))}
           </ul>
-        </OutsideClickHandler>
-      ) : null}
-    </div>
+        ) : null}
+      </div>
+    </OutsideClickHandler>
   );
 };
 
