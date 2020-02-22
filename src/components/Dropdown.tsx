@@ -58,7 +58,7 @@ const Dropdown: NextPage<DropdownProps> = ({
             </button>
           </li>
           {weathers.map(weather => (
-            <li role="menuitem">
+            <li role="menuitem" key={`${weather.current.id}button`}>
               <button
                 value={weather.current.id}
                 className="hover:text-gray-700"
