@@ -1,0 +1,5 @@
+{
+  "env": {
+    "OPENWEATHERMAP_API_KEY_PROD": "@openweathermap-api-key"
+  }
+}
