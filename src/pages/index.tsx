@@ -20,8 +20,7 @@ const Index = () => {
   const [visibleWeathers, setVisibleWeathers] = useState<Weather[]>();
 
   useEffect(() => {
-    if (weathers) {
-      console.log("weathers", weathers);
+    if (weathers && !visibleWeathers) {
       setVisibleWeathers(weathers);
     }
   }, [weathers]);
