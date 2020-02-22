@@ -1,7 +1,7 @@
 {
-  "name": "next-starter-tailwind",
-  "version": "1.0.5",
-  "description": "Next.js starter styled with Tailwind CSS",
+  "name": "weather-station",
+  "version": "1.0.0",
+  "description": "Weather station that shows weather on specific locations",
   "main": "index.js",
   "scripts": {
     "dev": "next",
@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/taylorbryant/next-starter-tailwind.git"
   },
-  "author": "Taylor Bryant",
+  "author": "Tero Jaakkola",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/taylorbryant/next-starter-tailwind/issues"
