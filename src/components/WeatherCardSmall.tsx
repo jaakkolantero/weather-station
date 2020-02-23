@@ -17,8 +17,8 @@ interface WeatherCardSmallProps {
 const WeatherCardSmall = ({ weather }: WeatherCardSmallProps) => {
   return (
     <div className="flex flex-col">
-      <div className="py-4 px-1 flex flex-col items-center bg-white border border-gray-300 rounded-t-lg">
-        <div className="text-gray-700 whitespace-no-wrap">
+      <div className="py-4 px-1 flex flex-col items-center bg-white border border-gray-300 rounded-t-lg text-sm">
+        <div className="text-gray-700 whitespace-no-wrap text-base">
           {weather?.date ? format(fromUnixTime(weather?.date), "HH:mm") : null}
         </div>
         {weather.img_url ? (
@@ -29,7 +29,7 @@ const WeatherCardSmall = ({ weather }: WeatherCardSmallProps) => {
         ) : (
           <div className="w-16 h-16" />
         )}
-        <div className="text-xl whitespace-no-wrap">
+        <div className="text-xl whitespace-no-wrap text-xl">
           {weather?.temp ? `${Math.round(weather?.temp)} ℃` : ""}
         </div>
       </div>

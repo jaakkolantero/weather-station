@@ -15,6 +15,7 @@ export default class MyApp extends App {
             content="width=device-width, initial-scale=1.0"
           />
           <title>Säätutka</title>
+          <meta name="theme-color" content="#00A5E5" />
         </Head>
         <Component {...pageProps} />
       </>

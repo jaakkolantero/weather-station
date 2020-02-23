@@ -5,5 +5,5 @@
 /* purgecss end ignore */
 
 body {
-  @apply font-body;
+  @apply font-body text-black text-base;
 }
