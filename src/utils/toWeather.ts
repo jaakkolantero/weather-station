@@ -21,35 +21,32 @@ interface WeatherData {
   list: WeatherListItem[];
 }
 
-export const toWeather = (data: WeatherData[]) => {
-  const weatherItems = data.map(weather => {
-    const current = {
+export const toWeather = ({
+  current: currentWeathers,
+  future: futureWeathers
+}: any) => {
+  const current = currentWeathers.map((weather: any) => ({
+    id: uuid.v4(),
+    name: weather.name,
+    description: weather.weather[0].description,
+    img_url: `http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`,
+    temp: weather.main.temp,
+    wind: weather.wind.speed,
+    humidity: weather.main.humidity,
+    precipitation: weather.rain ? weather.rain["3h"] : 0,
+    date: weather.dt
+  }));
+  const weathers = futureWeathers.map((weather: any, i: number) => ({
+    current: current[i],
+    future: weather.list.slice(0, 5).map((listItem: any) => ({
       id: uuid.v4(),
-      name: weather.city.name,
-      description: weather.list[0].weather[0].description,
-      img_url: `http://openweathermap.org/img/wn/${weather.list[0].weather[0].icon}@2x.png`,
-      temp: weather.list[0].main.temp,
-      wind: weather.list[0].wind.speed,
-      humidity: weather.list[0].main.humidity,
-      // TODO: implement precipitation
-      precipitation: weather.list[0].rain ? weather.list[0].rain["3h"] : 0,
-      date: weather?.list[0]?.dt
-    };
-    const future = weather.list
-      .slice(1)
-      .slice(0, 5)
-      .map(listItem => ({
-        id: uuid.v4(),
-        date: listItem?.dt,
-        img_url: `http://openweathermap.org/img/wn/${listItem.weather[0].icon}@2x.png`,
-        temp: listItem.main.temp,
-        wind: listItem.wind.speed,
-        humidity: listItem.main.humidity,
-        // TODO: implement precipitation
-        precipitation: listItem.rain ? listItem?.rain["3h"] : 0
-      }));
-    return { current, future };
-  });
-
-  return weatherItems;
+      date: listItem?.dt,
+      img_url: `http://openweathermap.org/img/wn/${listItem.weather[0].icon}@2x.png`,
+      temp: listItem.main.temp,
+      wind: listItem.wind.speed,
+      humidity: listItem.main.humidity,
+      precipitation: listItem.rain ? listItem?.rain["3h"] : 0
+    }))
+  }));
+  return weathers;
 };

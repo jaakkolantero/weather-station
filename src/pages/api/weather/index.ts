@@ -69,14 +69,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (shouldUpdate()) {
-    const weathers = await Promise.all(
+    const current = await Promise.all(
+      offices.map(async office =>
+        fetch(
+          `https://api.openweathermap.org/data/2.5/weather?id=${office.id}&appid=${process.env.OPENWEATHERMAP_API_KEY_PROD}&units=metric&lang=fi`
+        ).then(data => data.json())
+      )
+    );
+    const future = await Promise.all(
       offices.map(async office =>
         fetch(
           `https://api.openweathermap.org/data/2.5/forecast?id=${office.id}&appid=${process.env.OPENWEATHERMAP_API_KEY_PROD}&units=metric&lang=fi`
         ).then(data => data.json())
       )
     );
-    update(weathers);
+    update({ current, future });
   }
+  toWeather(cacheFairy.data);
   res.status(200).json(toWeather(cacheFairy.data));
 };
