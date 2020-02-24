@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fetch from "isomorphic-unfetch";
+import { differenceInMinutes } from "date-fns";
 import { dummyWeathers } from "../../../utils/dummy";
 import { toWeather } from "../../../utils/toWeather";
 
@@ -10,35 +11,72 @@ const offices = [
   { city: "helsinki", id: 658225 }
 ];
 
-let cacheFairy = {};
+interface CacheFairy {
+  last_edit?: Date | number;
+  data?: any;
+}
+
+let cacheFairy: CacheFairy = {};
+const updateIntervalMins = 20;
+
+const update = (data: any) => {
+  cacheFairy = {
+    ...cacheFairy,
+    last_edit: new Date(),
+    data
+  };
+};
+
+const shouldUpdate = () => {
+  if (cacheFairy.data && cacheFairy.last_edit) {
+    if (
+      differenceInMinutes(new Date(), cacheFairy.last_edit) >=
+      updateIntervalMins
+    ) {
+      console.log(
+        "update cache. Next update in ",
+        cacheFairy.last_edit &&
+          updateIntervalMins -
+            differenceInMinutes(new Date(), cacheFairy.last_edit),
+        "mins"
+      );
+      return true;
+    } else {
+      console.log(
+        "return cache. Next update in ",
+        cacheFairy.last_edit &&
+          updateIntervalMins -
+            differenceInMinutes(new Date(), cacheFairy.last_edit),
+        "mins"
+      );
+      return false;
+    }
+  }
+  console.log("save to cache");
+  return true;
+};
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (
     process.env.NODE_ENV === "development" &&
     process.env.DATA_SOURCE === "DUMMY"
   ) {
-    if ("data" in cacheFairy) {
-      console.log("return cache", dummyWeathers.length);
-    } else {
-      cacheFairy = { ...cacheFairy, data: dummyWeathers };
-      console.log("save to cache");
-    }
     console.log("Using dummy data!");
-    return res.status(200).json(toWeather(dummyWeathers));
+    if (shouldUpdate()) {
+      update(dummyWeathers);
+    }
+    return res.status(200).json(toWeather(cacheFairy.data));
   }
 
-  const weathers = await Promise.all(
-    offices.map(async office =>
-      fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?id=${office.id}&appid=${process.env.OPENWEATHERMAP_API_KEY_PROD}&units=metric&lang=fi`
-      ).then(data => data.json())
-    )
-  );
-  console.log(
-    "process.env.OPENWEATHERMAP_API_KEY_PROD",
-    process.env.OPENWEATHERMAP_API_KEY_PROD
-  );
-  console.log("weathers", weathers);
-  console.log("weather", toWeather(weathers));
-  res.status(200).json(toWeather(weathers));
+  if (shouldUpdate()) {
+    const weathers = await Promise.all(
+      offices.map(async office =>
+        fetch(
+          `https://api.openweathermap.org/data/2.5/forecast?id=${office.id}&appid=${process.env.OPENWEATHERMAP_API_KEY_PROD}&units=metric&lang=fi`
+        ).then(data => data.json())
+      )
+    );
+    update(weathers);
+  }
+  res.status(200).json(toWeather(cacheFairy.data));
 };
