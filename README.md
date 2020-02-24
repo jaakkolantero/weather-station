@@ -19,9 +19,7 @@ touch .env
 .env
 
 ```
-OPENWEATHERMAP_API_KEY=123456789abcdefghijkl
-# optional for development with dummy data
-DATA_SOURCE=DUMMY
+OPENWEATHERMAP_API_KEY_PROD=123456789abcdefghijkl
 ```
 
 run locally
