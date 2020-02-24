@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fetch from "isomorphic-unfetch";
 import { differenceInMinutes } from "date-fns";
-import { dummyWeathers } from "../../../utils/dummy";
 import { toWeather } from "../../../utils/toWeather";
 
 const offices = [
@@ -57,17 +56,6 @@ const shouldUpdate = () => {
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.DATA_SOURCE === "DUMMY"
-  ) {
-    console.log("Using dummy data!");
-    if (shouldUpdate()) {
-      update(dummyWeathers);
-    }
-    return res.status(200).json(toWeather(cacheFairy.data));
-  }
-
   if (shouldUpdate()) {
     const current = await Promise.all(
       offices.map(async office =>
